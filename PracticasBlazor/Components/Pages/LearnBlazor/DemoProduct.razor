@@ -1,0 +1,65 @@
+﻿@page "/learnBlazor/demoproduct"
+<div class="row d-flex">
+    <h1 class="text-primary"> Demo product</h1>
+    @foreach (Product prod in productList)
+    {
+        <div class="col-6 border p-3 bg-body-tertiary">
+            <h4 class="text-secondary">Product @prod.Id</h4>
+            <div>Name - @prod.Name</div>
+            <div><input type="checkbox" @bind="prod.IsActive" /></div>
+            @if (prod.IsActive)
+            {
+                foreach (ProductProp prop in prod.ProductProperties)
+                {
+                    <div>@prop.Key - @prop.Value</div>
+                }
+            }
+            <br />
+            <button class="btn btn-danger" @onclick="()=>DeleteProduct(prod.Id)">Delete</button>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Product> productList = new List<Product>();
+    protected override void OnInitialized()
+    {
+        productList.Add(new()
+            {
+                Id = 1,
+                Name = "Midnight Blaze",
+                IsActive = false,
+                Price = 5.99,
+                ProductProperties = new List<ProductProp>
+                {
+                    new ProductProp { Id = 1, Key = "Flavor", Value = "Rose"},
+                    new ProductProp { Id = 2, Key = "Size", Value = "20oz"},
+                    new ProductProp { Id = 3, Key = "Color", Value="Purple" }
+                }
+            });
+
+        productList.Add(new()
+            {
+                Id = 2,
+                Name = "Blossom Lily",
+                Price = 10.99,
+                IsActive = true,
+                ProductProperties = new List<ProductProp>
+                {
+                    new ProductProp { Id = 1, Key = "Flavor", Value = "Lily" },
+                    new ProductProp { Id = 2, Key = "Size", Value = "18oz" },
+                    new ProductProp {Id = 3,Key = "Color",Value = "White"}
+                }
+            });
+    }
+
+    private void DeleteProduct(int id)
+    {
+        Product producto = productList.FirstOrDefault(p => p.Id == id);
+        if (producto != null)
+        {
+            productList.Remove(producto);
+        }
+        Console.Write("Delete Producto "+id);
+    }
+}
